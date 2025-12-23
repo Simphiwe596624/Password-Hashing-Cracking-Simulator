@@ -1,0 +1,23 @@
+In the HTML file, 
+use one of the provided passwords to observe the effectiveness of this tool, 
+and also test it using your own passwords.
+
+
+admin@cyber2025
+simphiwe@rand
+ 123456
+ password57
+ thembi123
+qwerty
+sandile
+simphiwe49
+simphiwetheblockmaster
+1689mbatha
+birdsdontsing56
+helloback
+mbatha123456
+student@2026
+newuser@2026
+simphiwebazzano
+simphiwe@2026
+        

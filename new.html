@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simphiwe's Cybersecurity Project</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+        }
+
+        header p {
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: auto;
+            opacity: 0.9;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #00eaff;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+        }
+
+        input {
+            background: #f1f1f1;
+        }
+
+        button {
+            background: #00eaff;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00bcd4;
+        }
+
+        .output {
+            background: #000;
+            color: #00ff88;
+            padding: 15px;
+            height: 180px;
+            overflow-y: auto;
+            margin-top: 15px;
+            font-family: monospace;
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>👨‍💻 Welcome to Simphiwe’s Cybersecurity Project 🔐</h1>
+    <p>
+        This project demonstrates how password hashing and cracking works using
+        <strong>SHA-256</strong>.  
+        It helps students understand how attackers test passwords and why
+        strong passwords matter.
+    </p>
+</header>
+
+<div class="container">
+
+    <!-- Hash Generator -->
+    <div class="card">
+        <h2>🔑 Hash Generator</h2>
+        <p>Enter a password to generate its SHA-256 hash.</p>
+
+        <input type="text" id="passwordInput" placeholder="Enter password">
+        <button onclick="generateHash()">Generate Hash</button>
+
+        <div class="output" id="hashOutput"></div>
+    </div>
+
+    <!-- Password Cracker -->
+    <div class="card">
+        <h2>🧨 Password Cracker (Simulation)</h2>
+        <p>Paste a SHA-256 hash and simulate a dictionary attack.</p>
+
+        <input type="text" id="hashInput" placeholder="Paste SHA-256 hash here">
+        <button onclick="simulateCrack()">Start Cracking</button>
+
+        <div class="output" id="crackOutput"></div>
+    </div>
+
+</div>
+
+<footer>
+    ⚠️ Educational Use Only | Cybersecurity Awareness Project by Simphiwe
+</footer>
+
+<script>
+    async function generateHash() {
+        const password = document.getElementById("passwordInput").value;
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+
+        document.getElementById("hashOutput").innerText =
+            "SHA-256 Hash:\n" + hashHex;
+    }
+
+    async function sha256(text) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function simulateCrack() {
+        const output = document.getElementById("crackOutput");
+
+        const targetHash = document
+            .getElementById("hashInput")
+            .value
+            .replace(/\s+/g, "")
+            .toLowerCase();
+
+        if (!targetHash) {
+            output.innerText = "⚠️ Please paste a hash first.";
+            return;
+        }
+
+        output.innerText = "";
+        const wordlist = ["admin@cyber2025","simphiwe@rand", "123456", "password57", "thembi123", "qwerty", "sandile", "simphiwe49", "simphiwetheblockmaster", "1689mbatha", "birdsdontsing56", "helloback", "mbatha123456", "student@2026", "newuser@2026", "simphiwebazzano","simphiwe@2026"];
+        let index = 0;
+
+        const interval = setInterval(async () => {
+            if (index >= wordlist.length) {
+                output.innerText += "\n❌ Password Not Found";
+                clearInterval(interval);
+                return;
+            }
+
+            const word = wordlist[index];
+            output.innerText += "Trying: " + word + "\n";
+
+            const hashedWord = (await sha256(word)).toLowerCase();
+
+            if (hashedWord === targetHash) {
+                output.innerText += "\n✅ PASSWORD FOUND: " + word;
+                clearInterval(interval);
+                return;
+            }
+
+            output.scrollTop = output.scrollHeight;
+            index++;
+        }, 600);
+    }
+</script>
+
+</body>
+</html>
